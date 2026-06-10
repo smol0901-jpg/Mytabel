@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ShiftTracker Pro | NEURAL_ARCHITECT_PREMIUM++</title>
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff; 
+      --text: #0f172a; 
+      --text-secondary: #475569;
+      --primary: #1e40af; 
+      --primary-weak: #f1f5f9; 
+      --success: #0f766e; 
+      --danger: #991b1b; 
+      --warning: #b45309; 
+      --geo: #4338ca; 
+      --border: #cbd5e1;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+      --transition: all 0.15s ease-in-out; 
+      --radius: 10px;
+    }
+    [data-theme="dark"] {
+      --bg: #0b0f19;
+      --card: #111827; 
+      --text: #f8fafc; 
+      --text-secondary: #94a3b8;
+      --primary: #3b82f6; 
+      --primary-weak: rgba(59,130,246,0.1); 
+      --border: #1f2937;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; transition: var(--transition); padding-bottom: 20px; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+    button, input, select, textarea { font: inherit; letter-spacing: -0.01em; } button { cursor: pointer; }
+    
+    header { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; color: #fff; background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    [data-theme="dark"] header { background: #111827; border-bottom: 1px solid var(--border); }
+    .logo h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; } 
+    .logo p { font-size: 11px; opacity: 0.6; margin-top: 1px; font-weight: 400; }
+    .theme-toggle { background: transparent; border: none; font-size: 16px; color: #fff; padding: 4px; opacity: 0.8; transition: var(--transition); }
+    
+    .tabs { display: flex; gap: 4px; overflow-x: auto; padding: 16px 24px 0; scrollbar-width: none; max-width: 1028px; margin: 0 auto; width: 100%; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { padding: 10px 16px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; background: transparent; color: var(--text-secondary); text-align: center; font-weight: 600; font-size: 13px; white-space: nowrap; transition: var(--transition); }
+    .tab.active { background: var(--card); color: var(--text); border-color: var(--border); font-weight: 700; position: relative; }
+    .tab.active::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--primary); border-radius: 6px 6px 0 0; }
+    
+    .tabs-container { max-width: 1028px; margin: 0 auto; padding: 0 24px; width: 100%; flex: 1; }
+    .tab-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .tab-content { display: none; padding: 24px; } .tab-content.active { display: block; }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+    .card-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    
+    .btn { width: 100%; min-height: 44px; padding: 10px 16px; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); text-decoration: none; letter-spacing: -0.01em; }
+    .btn:active { transform: translateY(0.5px); opacity: 0.9; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-start { background: var(--success); color: #fff; } 
+    .btn-end { background: var(--danger); color: #fff; } 
+    .btn-geo { background: var(--geo); color: #fff; } 
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--primary-weak); }
+    .btn-sm { min-height: 30px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; font-size: 12px; } 
+    .btn-delete { background: transparent; color: var(--danger); border: 1px solid var(--border); }
+    .btn-delete:hover { background: rgba(153, 27, 27, 0.05); border-color: var(--danger); }
+    .btn-ai { background: #0f172a; color: white; border: 1px solid rgba(255,255,255,0.1); }
+    [data-theme="dark"] .btn-ai { background: #1f2937; }
+    
+    .period-selector { display: flex; gap: 4px; background: var(--primary-weak); padding: 4px; border-radius: 6px; border: 1px solid var(--border); }
+    .period-btn { background: transparent; border: none; padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); border-radius: 4px; transition: var(--transition); }
+    .period-btn.active { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+    .stat-card { background: var(--primary-weak); border: 1px solid var(--border); border-radius: 6px; padding: 16px; text-align: left; } 
+    .stat-value { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; } 
+    .stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; margin-top: 6px; font-weight: 600; letter-spacing: 0.02em; }
+    
+    .chart-container { position: relative; width: 100%; height: 260px; margin-bottom: 20px; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: blink 1.6s infinite; display: inline-block; margin-right: 8px; vertical-align: middle; } 
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.4} }
+    
+    .status-badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .status-inactive { background: var(--primary-weak); color: var(--text-secondary); border: 1px solid var(--border); } 
+    .status-active { background: rgba(15, 118, 110, 0.1); color: var(--success); border: 1px solid var(--success); }
+    
+    .geo-instruction { font-size: 13px; color: var(--text-secondary); background: var(--primary-weak); border-radius: 6px; padding: 16px; margin: 14px 0; line-height: 1.6; border-left: 3px solid var(--geo); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    
+    label { display: block; font-size: 11px; font-weight: 700; margin: 12px 0 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.03em; }
+    input, select, textarea { width: 100%; min-height: 38px; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text); transition: var(--transition); }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; }
+    
+    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.4); backdrop-filter: blur(2px); align-items: center; justify-content: center; } 
+    .modal.active { display: flex; }
+    .modal-content { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 92%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; } 
+    .modal-head h2 { font-size: 15px; font-weight: 700; text-transform: uppercase; }
+    .modal-close { font-size: 20px; background: none; border: none; color: var(--text-secondary); padding: 0 6px; }
+    
+    .job-item, .history-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px; transition: var(--transition); }
+    .job-item:hover, .history-item:hover { border-color: var(--border); background: var(--primary-weak); }
+    .job-details, .history-info p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .history-item.planned { border-left: 3px solid var(--warning); }
+    .history-item.manual-payout { border-left: 3px solid var(--geo); }
+    
+    .pay-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-top: 6px; text-transform: uppercase; }
+    .pay-paid { background: rgba(15, 118, 110, 0.1); color: var(--success); }
+    .pay-pending { background: rgba(180, 83, 9, 0.1); color: var(--warning); }
+    .history-actions { display: flex; gap: 8px; }
+    
+    .calendar-wrap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 12px; }
+    .calendar-day-head { font-size: 11px; font-weight: 700; color: var(--text-secondary); padding: 8px 0; background: var(--primary-weak); text-transform: uppercase; text-align: center; }
+    .calendar-day { background: var(--card); min-height: 65px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; cursor: pointer; transition: var(--transition); position: relative; }
+    .calendar-day:hover { background: var(--primary-weak); }
+    .calendar-day.other-month { opacity: 0.25; background: var(--bg); }
+    .calendar-day.has-shifts { background: var(--primary-weak); }
+    .calendar-day-num { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .calendar-day.has-shifts .calendar-day-num { color: var(--primary); font-weight: 700; }
+    .calendar-day-dot { font-size: 9px; font-weight: 700; color: var(--text); background: var(--card); border: 1px solid var(--border); padding: 1px 2px; border-radius: 3px; width: 100%; text-align: center; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .analytics-table-wrap { width: 100%; overflow-x: auto; margin-top: 8px; }
+    .analytics-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .analytics-table th, .analytics-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .analytics-table th { color: var(--text-secondary); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.02em; background: var(--primary-weak); }
+    .ai-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .template-box { background: var(--primary-weak); font-family: monospace; font-size: 11px; padding: 12px; border-radius: 6px; border: 1px dashed var(--border); color: var(--text-secondary); margin-top: 10px; white-space: pre-wrap; overflow-x: auto; }
+
+    footer { max-width: 1028px; margin: 20px auto 0; padding: 0 24px; width: 100%; display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); }
+    footer a { color: var(--primary); text-decoration: none; }
+
+    @media (max-width: 700px) { 
+      .stats-grid, .form-row, .ai-panel-grid { grid-template-columns: 1fr; gap: 10px; } 
+      .tabs-container { padding: 0 12px; }
+      .tabs { padding: 12px 12px 0; }
+      .tab-content { padding: 16px; }
+      footer { flex-direction: column; gap: 6px; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo"><h1>ShiftTracker Pro</h1><p>Системный учет и мониторинг смен</p></div>
+  <button class="theme-toggle" id="themeBtn" aria-label="Смена темы">🌓</button>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="geo">Геолокация</button>
+  <button class="tab" data-tab="tracker">Панель трекера</button>
+  <button class="tab" data-tab="calendar">Календарь</button>
+  <button class="tab" data-tab="analytics">Аналитика</button>
+  <button class="tab" data-tab="history">Реестр / ИИ</button>
+</div>
+
+<div class="tabs-container">
+  <div class="tab-wrap">
+    
+    <section class="tab-content active" id="geo-content">
+      <div class="card">
+        <div class="card-title">Интеграция системных триггеров (Shortcuts)</div>
+        <div class="geo-instruction">
+          <strong>Автоматизация процессов:</strong><br>
+          1. В приложении Команды (Shortcuts) настройте запуск веб-ссылок по геозоне:<br>
+          • <strong>Вход в радиус работы</strong> → открыть URL: <code>ВашДомен/?action=arrive</code><br>
+          • <strong>Выход из радиуса работы</strong> → открыть URL: <code>ВашДомен/?action=leave</code><br>
+          2. Сессия активируется автономно, если в реестре запланирована смена на текущую дату.
+        </div>
+        <div id="geoIndicator">
+          <span id="geoStatusText" style="font-weight: 600; font-size: 13px; color: var(--text-secondary);">Режим ожидания внешнего триггера</span>
+        </div>
+        
+        <div style="margin-top: 20px;">
+          <label>Объект для привязки координат (Поддерживает до 10+ локаций)</label>
+          <select id="geoJobSelect" style="margin-bottom: 12px;"><option value="">Выберите объект...</option></select>
+          <div class="form-row">
+            <button class="btn btn-geo" id="setWorkCoordsBtn">Зафиксировать позицию</button>
+            <button class="btn btn-secondary" id="clearWorkCoordsBtn">Сбросить геозону</button>
+          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Координаты целевой зоны объекта: <span id="workCoordsDisplay" style="font-family: monospace;">не заданы</span></p>
+        </div>
+        
+        <div id="geoActivePanel" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px;">
+          <div id="geoShiftBadge" class="status-badge status-inactive">Сессия закрыта</div>
+          <div id="geoActiveInfo" style="display: none; font-size: 13px;"><span id="geoActiveJob" style="font-weight: 700;"></span> · <span id="geoActiveTime" style="color: var(--text-secondary);"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tracker-content">
+      <div class="card">
+        <div class="card-title">Управление текущей сессией</div>
+        <div id="inactivePanel">
+          <div class="status-badge status-inactive">Система не активна</div>
+          <label>Выберите текущую занятость</label>
+          <select id="quickJobSelect" style="margin-bottom: 16px;"><option value="">Выберите объект...</option></select>
+          <button class="btn btn-start" id="startShiftBtn">Активировать смену</button>
+          <button class="btn btn-secondary" id="openManualBtn" style="margin-top: 12px;">Внести запись в архив</button>
+        </div>
+        <div id="activePanel" style="display: none;">
+          <div class="status-badge status-active">Учет времени запущен</div>
+          <div id="activeJobName" style="font-weight: 700; font-size: 16px; margin-bottom: 4px;"></div>
+          <div id="activeStartTime" style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;"></div>
+          <button class="btn btn-end" id="endShiftBtn">Завершить смену</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="calendar-content">
+      <div class="card">
+        <div class="card-title">
+          <span>График планирования</span>
+          <div>
+            <button class="btn-sm" id="prevMonthBtn">Предыдущий</button>
+            <span id="monthYear" style="margin: 0 8px; font-weight: 700; font-size: 13px; text-transform: uppercase;"></span>
+            <button class="btn-sm" id="nextMonthBtn">Следующий</button>
+          </div>
+        </div>
+        <div id="calendarGrid" class="calendar-wrap"></div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="analytics-content">
+      <div class="card">
+        <div class="card-title">
+          <span><span class="live-dot"></span> Эффективность баланса</span>
+          <div class="period-selector">
+            <button class="period-btn" data-period="week">Неделя</button>
+            <button class="period-btn" data-period="month">Месяц</button>
+            <button class="period-btn active" data-period="all">Все время</button>
+          </div>
+        </div>
+        <div class="chart-container"><canvas id="earningsChart"></canvas></div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-value" id="totalNet">0 ₽</div><div class="stat-label">Чистая прибыль</div></div>
+          <div class="stat-card"><div class="stat-value" id="cashReceived" style="color: var(--success);">0 ₽</div><div class="stat-label">Проведено</div></div>
+          <div class="stat-card"><div class="stat-value" id="cashPending" style="color: var(--warning);">0 ₽</div><div class="stat-label">В обработке</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Сводная таблица эффективности (Распределение ресурсов)</div>
+        <div class="analytics-table-wrap">
+          <table class="analytics-table">
+            <thead>
+              <tr>
+                <th>Объект / Контракт</th>
+                <th>Часы</th>
+                <th>Грязный доход</th>
+                <th>Расходы (Дорога)</th>
+                <th>Чистая прибыль</th>
+                <th>Рейтинг (₽/ч)</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="history-content">
+      <div class="card">
+        <div class="card-title">Резервное копирование системы (Полный импорт/экспорт)</div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Служит для полной миграции данных Localhost. Экспортирует и импортирует абсолютно все объекты, смены и геозоны.</p>
+        <div class="ai-panel-grid" style="margin-bottom: 10px;">
+          <button class="btn btn-geo" id="exportFullBackupBtn">Выгрузить все данные приложения</button>
+          <div style="position: relative;">
+            <button class="btn btn-primary" style="width: 100%;">Загрузить файл бэкапа</button>
+            <input type="file" id="importFullBackupFile" accept=".json" style="position: absolute; inset: 0; opacity: 0; cursor: pointer;">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Регистрация произвольных выплат</div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Используйте для фиксации премий, прямых переводов или выплат за рамками почасового тайм-трекера.</p>
+        <div class="form-row">
+          <div>
+            <label>Дата выплаты</label>
+            <input type="date" id="payoutDate">
+          </div>
+          <div>
+            <label>Объект привязки</label>
+            <select id="payoutJobSelect"></select>
+          </div>
+        </div>
+        <div class="form-row" style="align-items: flex-end;">
+          <div>
+            <label>Сумма выплаты, ₽</label>
+            <input type="number" id="payoutAmount" placeholder="Например, 5000">
+          </div>
+          <button class="btn btn-primary" id="addPayoutBtn" style="min-height: 38px;">Провести выплату</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Интеграция с предиктивными моделями ИИ</div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Выгружайте датасеты или мгновенно импортируйте готовые графики от ИИ через буфер обмена либо структурированный файл.</p>
+        <div class="ai-panel-grid">
+          <button class="btn btn-ai" id="exportAiStatsBtn">Выгрузить датасет</button>
+          <div style="position: relative;">
+            <button class="btn btn-secondary" style="width: 100%;">Импортировать файл</button>
+            <input type="file" id="importAiFile" accept=".json" style="position: absolute; inset: 0; opacity: 0; cursor: pointer;">
+          </div>
+        </div>
+        
+        <label>Прямой ввод / Вставка JSON данных (без лимитов объема):</label>
+        <textarea id="importAiTextarea" placeholder='Вставьте сюда ваш JSON код. Пример: {"shifts": [...]}. Данные объединятся без потери старой истории.' style="margin-top: 6px; min-height: 120px; font-family: monospace; font-size: 12px; resize: vertical;"></textarea>
+        <button class="btn btn-primary" id="importAiTextBtn" style="margin-top: 10px; min-height: 38px;">Импортировать из поля ввода</button>
+        
+        <label style="margin-top: 16px;">Технический эталон JSON-шаблона для импорта:</label>
+        <div class="template-box" id="templateBox"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Архивный реестр записей</div>
+        <div id="historyList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Реестр контрактов и объектов</div>
+        <div style="margin-bottom: 16px;">
+          <input type="text" id="newJobName" placeholder="Наименование контрагента / объекта" style="margin-bottom: 10px;">
+          <div class="form-row">
+            <input type="number" id="newJobRate" placeholder="Ставка, ₽/час">
+            <input type="number" id="newJobCommuteCost" placeholder="Накладные расходы, ₽">
+          </div>
+          <button class="btn btn-primary" id="addJobBtn" style="min-height: 38px; margin-top: 4px;">Добавить запись</button>
+        </div>
+        <div id="jobsList"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="modal" id="manualModal">
+  <div class="modal-content">
+    <div class="modal-head"><h2 id="modalTitle">Спецификация смены</h2><button class="modal-close" id="modalCloseBtn">×</button></div>
+    <input type="hidden" id="editShiftId">
+    
+    <label>Категория учета</label>
+    <select id="mStatusSelect"><option value="completed">Фактическое исполнение</option><option value="planned">Планируемый период</option></select>
+    
+    <label>Дата проведения</label>
+    <input type="date" id="mDate">
+    
+    <label>Контрагент</label>
+    <select id="mJobSelect"></select>
+   
+    <div class="form-row">
+      <div><label>Время начала</label><input type="time" id="mStart"></div>
+      <div><label>Время окончания</label><input type="time" id="mEnd"></div>
+    </div>
+    
+    <label>Финансовый статус</label>
+    <select id="mPayStatus"><option value="pending">Ожидание расчета</option><option value="paid">Проведено / Закрыто</option></select>
+    
+    <label>Дата проведения транзакции</label>
+    <input type="date" id="mPayDate">
+    
+    <button class="btn btn-primary" id="saveManualBtn" style="margin-top: 20px;">Сохранить параметры</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Система: NEURAL_ARCHITECT_PREMIUM++</div>
+  <div>
+    Разработчик: <a href="https://t.me/ASV_PROD" target="_blank">Telegram ASV_PROD</a> | Блог: <a href="https://dzen.ru/ASV_PROD" target="_blank">Дзен ASV_PROD</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const STORAGE = { 
+    jobs: 'sa_jobs', 
+    shifts: 'sa_shifts', 
+    activeShift: 'sa_active_shift', 
+    theme: 'sa_theme', 
+    tab: 'sa_activeTab', 
+    workCoordsList: 'sa_workCoordsList' 
+  };
+  
+  const state = { 
+    jobs: [], 
+    shifts: [], 
+    activeShift: null, 
+    currentDate: new Date(), 
+    activeTab: 'geo', 
+    chart: null, 
+    workCoordsList: [], 
+    analyticsPeriod: 'all' 
+  };
+  
+  function $(id) { return document.getElementById(id); }
+  function safeParse(key, fb) { try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : fb; } catch { return fb; } }
+  function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+  function loadState() {
+    state.jobs = safeParse(STORAGE.jobs, []);
+    state.shifts = safeParse(STORAGE.shifts, []);
+    state.activeShift = safeParse(STORAGE.activeShift, null);
+    state.workCoordsList = safeParse(STORAGE.workCoordsList, []);
+    state.activeTab = localStorage.getItem(STORAGE.tab) || 'geo';
+    
+    const pDate = $('payoutDate');
+    if(pDate) pDate.value = new Date().toISOString().slice(0, 10);
+    
+    renderTemplateExample();
+  }
+
+  function renderTemplateExample() {
+    const example = {
+      _info: "Статистика смен для обучения ИИ",
+      shifts: [
+        {
+          id: Date.now(),
+          jobId: state.jobs[0] ? state.jobs[0].id : 1781037122445,
+          date: "2026-06-03",
+          start: "09:00",
+          end: "21:00",
+          hours: 12,
+          status: "completed",
+          paymentStatus: "pending",
+          paymentDate: "2026-06-03"
+        }
+      ]
+    };
+    const box = $('templateBox');
+    if(box) box.textContent = JSON.stringify(example, null, 2);
+  }
+
+  function initTheme() { 
+    const t = localStorage.getItem(STORAGE.theme) || 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  }
+  
+  function toggleTheme() { 
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    const nxt = cur === 'light' ? 'dark' : 'light'; 
+    document.documentElement.setAttribute('data-theme', nxt); 
+    localStorage.setItem(STORAGE.theme, nxt); 
+    if (state.chart) updateChart();
+  }
+
+  function setTab(tabId) {
+    state.activeTab = tabId; localStorage.setItem(STORAGE.tab, tabId);
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+    document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+    const target = $(`${tabId}-content`); if (target) target.classList.add('active');
+    
+    if (tabId === 'analytics') { updateChart(); updateAnalytics(); updateStats(); }
+    if (tabId === 'calendar') renderCalendar();
+    if (tabId === 'geo') updateGeoUI();
+    if (tabId === 'tracker') setActiveShiftView();
+  }
+
+  function parseTimeToMinutes(t) { if(!t) return 0; const [h,m] = t.split(':').map(Number); return h*60+m; }
+  function diffHours(s,e) { let m = parseTimeToMinutes(e)-parseTimeToMinutes(s); if(m<0)m+=24*60; return +(m/60).toFixed(2); }
+  function fmtMoney(v) { return new Intl.NumberFormat('ru-RU').format(Math.round(v))+' ₽'; }
+  function getJob(id) { return state.jobs.find(j=>j.id===Number(id))||null; }
+  function escapeHtml(s) { return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+
+  function isInPeriod(dateStr, period) {
+    if (period === 'all') return true;
+    const itemDate = new Date(dateStr);
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    itemDate.setHours(0,0,0,0);
+    
+    if (period === 'week') {
+      const currentDay = now.getDay();
+      const distanceToMonday = currentDay === 0 ? 6 : currentDay - 1;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - distanceToMonday);
+      return itemDate >= monday && itemDate <= now;
+    }
+    if (period === 'month') {
+      return itemDate.getFullYear() === now.getFullYear() && itemDate.getMonth() === now.getMonth();
+    }
+    return true;
+  }
+
+  function haversineDistance(lat1,lon1,lat2,lon2){ 
+    const R=6371000; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; 
+    const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); 
+  }
+  
+  function isInsideWorkZone(lat,lon){ 
+    if(!state.activeShift) return false;
+    const zone = state.workCoordsList.find(z => z.jobId === Number(state.activeShift.jobId));
+    if(!zone) return false; 
+    return haversineDistance(lat,lon,zone.lat,zone.lon)<=150;
+  }
+
+  function setWorkCoordsFromCurrent(){
+    const jId = $('geoJobSelect').value;
+    if(!jId) { alert('Необходимо указать объект для привязки координат.'); return; }
+    if(!navigator.geolocation){ alert('Геолокация недоступна в текущем окружении.'); return; }
+    
+    navigator.geolocation.getCurrentPosition(pos=>{ 
+      const newZone = {jobId: Number(jId), lat:pos.coords.latitude, lon:pos.coords.longitude}; 
+      state.workCoordsList = state.workCoordsList.filter(z => z.jobId !== Number(jId));
+      state.workCoordsList.push(newZone);
+      
+      save(STORAGE.workCoordsList, state.workCoordsList); 
+      updateGeoUI(); 
+      alert('Геозона для выбранного объекта успешно зафиксирована.'); 
+    }, err=>{ alert('Ошибка фиксации координат: '+err.message); },{enableHighAccuracy:true,timeout:10000});
+  }
+
+  function clearWorkCoords(){ 
+    const jId = $('geoJobSelect').value;
+    if(!jId) { alert('Выберите объект для удаления геозоны.'); return; }
+    if(!confirm('Удалить геозону для выбранного объекта?')) return; 
+    
+    state.workCoordsList = state.workCoordsList.filter(z => z.jobId !== Number(jId));
+    save(STORAGE.workCoordsList, state.workCoordsList); 
+    updateGeoUI();
+    alert('Геозона объекта очищена.');
+  }
+
+  function handleUrlTrigger(){
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if(!action || (action!=='arrive' && action!=='leave')) return;
+    if(!navigator.geolocation){ return; }
+    
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const lat=pos.coords.latitude, lon=pos.coords.longitude;
+      const now = new Date();
+      const today = now.toISOString().slice(0,10);
+      
+      if(action==='arrive'){
+        if(state.activeShift){ return; }
+        const plannedShift = state.shifts.find(s=>s.date===today && s.status==='planned');
+        if(plannedShift) {
+          const zone = state.workCoordsList.find(z => z.jobId === Number(plannedShift.jobId));
+          if(zone && haversineDistance(lat, lon, zone.lat, zone.lon) <= 150) {
+            startShiftForJob(plannedShift.jobId, lat, lon);
+          }
+        }
+      } else if(action==='leave'){
+        if(state.activeShift){ endShiftWithCoords(lat, lon); }
+      }
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }, err=>{ console.error(err); },{enableHighAccuracy:true,timeout:10000});
+  }
+
+  function startShiftForJob(jobId, lat, lon){
+    const now = new Date();
+    state.activeShift = { jobId, date: now.toISOString().slice(0,10), startTime: now.toTimeString().slice(0,5), arrivalLat: lat, arrivalLon: lon };
+    save(STORAGE.activeShift, state.activeShift);
+    refreshAll();
+  }
+
+  function endShiftWithCoords(lat, lon){
+    if(!state.activeShift) return;
+    const now = new Date();
+    const endTime = now.toTimeString().slice(0,5);
+    const hours = diffHours(state.activeShift.startTime, endTime);
+    state.shifts.push({
+      id: Date.now(), jobId: state.activeShift.jobId, date: state.activeShift.date,
+      start: state.activeShift.startTime, end: endTime, hours,
+      status: 'completed', paymentStatus: 'pending', paymentDate: state.activeShift.date,
+      arrivalLat: state.activeShift.arrivalLat, arrivalLon: state.activeShift.arrivalLon,
+      departureLat: lat, departureLon: lon
+    });
+    state.activeShift = null; localStorage.removeItem(STORAGE.activeShift);
+    save(STORAGE.shifts, state.shifts);
+    refreshAll();
+  }
+
+  function startShift(){
+    const jobId = Number($('quickJobSelect')?.value);
+    if(!jobId) return alert('Укажите объект для старта.');
+    const now = new Date();
+    state.activeShift = { jobId, date: now.toISOString().slice(0,10), startTime: now.toTimeString().slice(0,5) };
+    save(STORAGE.activeShift, state.activeShift);
+    refreshAll();
+  }
+
+  function endShift(){
+    if(!state.activeShift) return;
+    const now = new Date();
+    const endTime = now.toTimeString().slice(0,5);
+    const hours = diffHours(state.activeShift.startTime, endTime);
+    state.shifts.push({ id: Date.now(), jobId: state.activeShift.jobId, date: state.activeShift.date, start: state.activeShift.startTime, end: endTime, hours, status:'completed', paymentStatus:'pending', paymentDate: state.activeShift.date });
+    state.activeShift = null; localStorage.removeItem(STORAGE.activeShift);
+    save(STORAGE.shifts, state.shifts);
+    refreshAll();
+  }
+
+  function addManualPayout() {
+    const date = $('payoutDate').value;
+    const jobId = Number($('payoutJobSelect').value);
+    const amount = Number($('payoutAmount').value);
+    
+    if(!date || !jobId || amount <= 0) return alert('Укажите корректную дату, объект и сумму.');
+    state.shifts.push({
+      id: Date.now(),
+      jobId,
+      date,
+      start: '00:00',
+      end: '00:00',
+      hours: 0,
+      fixedPayout: amount,
+      status: 'completed',
+      paymentStatus: 'paid',
+      paymentDate: date,
+      isManualPayout: true
+    });
+    save(STORAGE.shifts, state.shifts);
+    $('payoutAmount').value = '';
+    refreshAll();
+    alert('Выплата зафиксирована.');
+  }
+
+  function openManualModal(shiftId=null, datePrefill=null){
+    const modal=$('manualModal'); modal.classList.add('active');
+    const mJob=$('mJobSelect');
+    mJob.innerHTML = state.jobs.map(j=>`<option value="${j.id}">${escapeHtml(j.name)} (${fmtMoney(j.rate)}/ч)</option>`).join('');
+    
+    if(shiftId){ 
+      const s=state.shifts.find(x=>x.id===shiftId);
+      if(!s){closeManualModal();return} 
+      $('modalTitle').textContent = 'Модификация записи'; 
+      $('editShiftId').value=s.id; 
+      $('mDate').value=s.date; 
+      mJob.value=s.jobId; 
+      $('mStart').value=s.start || '00:00'; 
+      $('mEnd').value=s.end || '00:00';
+      $('mStatusSelect').value=s.status||'completed'; 
+      $('mPayStatus').value=s.paymentStatus||'pending'; 
+      $('mPayDate').value=s.paymentDate||s.date;
+    } else { 
+      $('modalTitle').textContent = 'Новая спецификация'; 
+      $('editShiftId').value=''; 
+      const d=datePrefill||new Date().toISOString().slice(0,10);
+      $('mDate').value=d; 
+      $('mStart').value='09:00'; 
+      $('mEnd').value='18:00'; 
+      mJob.value=state.jobs[0]?.id||''; 
+      $('mStatusSelect').value= datePrefill && new Date(datePrefill) > new Date() ? 'planned' : 'completed';
+      $('mPayStatus').value='pending'; 
+      $('mPayDate').value=d;
+    }
+  }
+  
+  function closeManualModal(){ $('manualModal').classList.remove('active'); }
+  
+  function saveManualShift(){
+    const editId=Number($('editShiftId').value)||null;
+    const date=$('mDate').value;
+    const jobId=Number($('mJobSelect').value); const start=$('mStart').value; const end=$('mEnd').value; const status=$('mStatusSelect').value; const ps=$('mPayStatus').value; const pd=$('mPayDate').value||date;
+    if(!date||!jobId||!start||!end) return alert('Обязательные поля не заполнены.');
+    const hours=diffHours(start,end);
+    
+    const payload={id:editId||Date.now(),jobId,date,start,end,hours,status,paymentStatus:ps,paymentDate:pd};
+    
+    if(editId){ 
+      const idx=state.shifts.findIndex(s=>s.id===editId);
+      if(idx>=0) {
+        if (state.shifts[idx].isManualPayout) payload.isManualPayout = true;
+        if (state.shifts[idx].fixedPayout) payload.fixedPayout = state.shifts[idx].fixedPayout;
+        state.shifts[idx]=payload;
+      }
+    } else state.shifts.push(payload);
+    
+    save(STORAGE.shifts,state.shifts); closeManualModal(); refreshAll();
+  }
+  
+  function deleteShift(id){ if(!confirm('Удалить запись безвозвратно?'))return; state.shifts=state.shifts.filter(s=>s.id!==id); save(STORAGE.shifts,state.shifts); refreshAll(); }
+  
+  function addJob(){ 
+    const name=$('newJobName').value.trim(); const rate=Number($('newJobRate').value); const cost=Number($('newJobCommuteCost').value)||0;
+    if(!name||rate<0)return alert('Укажите корректное наименование и ставку.'); 
+    state.jobs.push({id:Date.now(),name,rate,commuteCost:cost}); 
+    save(STORAGE.jobs,state.jobs); $('newJobName').value='';$('newJobRate').value='';$('newJobCommuteCost').value=''; refreshAll();
+  }
+  
+  function deleteJob(id){ 
+    if(!confirm('Исключить объект и связанные смены из реестра?'))return; 
+    state.jobs=state.jobs.filter(j=>j.id!==id); 
+    state.shifts=state.shifts.filter(s=>s.jobId!==id); 
+    state.workCoordsList=state.workCoordsList.filter(z=>z.jobId!==id);
+    save(STORAGE.jobs,state.jobs); 
+    save(STORAGE.shifts,state.shifts); 
+    save(STORAGE.workCoordsList,state.workCoordsList);
+    refreshAll();
+  }
+
+  function exportAiStats(){
+    const data = state.shifts.filter(s=>s.status==='completed').map(s=>{ const j=getJob(s.jobId); return { id: s.id, jobId: s.jobId, date:s.date, start:s.start, end:s.end, hours:s.hours, status: s.status, paymentStatus: s.paymentStatus, paymentDate: s.paymentDate, isManualPayout: s.isManualPayout || false, fixedPayout: s.fixedPayout || 0 }; });
+    const blob = new Blob([JSON.stringify({_info:"Статистика смен для обучения ИИ", shifts:data},null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='shift_ai_stats.json'; a.click();
+  }
+
+  // --- ТОТАЛЬНЫЙ ОПЕРАЦИОННЫЙ ИМПОРТ/ЭКСПОРТ BACKUP ЛОКАЛХОСТА ---
+  function exportFullBackup() {
+    const backupData = {
+      jobs: state.jobs,
+      shifts: state.shifts,
+      workCoordsList: state.workCoordsList
+    };
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `shift_tracker_master_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+
+  function importFullBackup(e) {
+    if (!e.target.files.length) return;
+    const fr = new FileReader();
+    fr.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (parsed && (parsed.jobs || parsed.shifts || parsed.workCoordsList)) {
+          if (Array.isArray(parsed.jobs)) save(STORAGE.jobs, parsed.jobs);
+          if (Array.isArray(parsed.shifts)) save(STORAGE.shifts, parsed.shifts);
+          if (Array.isArray(parsed.workCoordsList)) save(STORAGE.workCoordsList, parsed.workCoordsList);
+          
+          alert('Все данные приложения успешно восстановлены из бэкапа! Страница будет перезапущена.');
+          location.reload();
+        } else {
+          alert('Неверный формат мастер-файла резервной копии.');
+        }
+      } catch (err) {
+        alert('Критическая ошибка разбора JSON структуры бэкапа.');
+        console.error(err);
+      }
+    };
+    fr.readAsText(e.target.files[0]);
+    e.target.value = '';
+  }
+  
+  function executeJsonProcessing(rawText) {
+    try {
+      const cleanText = rawText.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+      if(!cleanText) { alert('Отсутствуют данные для парсинга.'); return false; }
+      
+      const parsedData = JSON.parse(cleanText);
+      if (parsedData && Array.isArray(parsedData.shifts)) {
+        const processedShifts = [];
+        parsedData.shifts.forEach((rawShift, index) => {
+          let jId = rawShift.jobId ? Number(rawShift.jobId) : null;
+          if (!jId) { jId = state.jobs[0] ? state.jobs[0].id : 1781037122445; }
+          
+          if (!getJob(jId)) {
+            state.jobs.push({
+              id: jId,
+              name: rawShift.jobName ? String(rawShift.jobName) : `Импортированный объект #${jId}`,
+              rate: 0,
+              commuteCost: 0
+            });
+          }
+          
+          const validDate = rawShift.date && /^\d{4}-\d{2}-\d{2}$/.test(rawShift.date) ? rawShift.date : new Date().toISOString().slice(0, 10);
+          const validStart = rawShift.start && /^\d{2}:\d{2}$/.test(rawShift.start) ? rawShift.start : "00:00";
+          const validEnd = rawShift.end && /^\d{2}:\d{2}$/.test(rawShift.end) ? rawShift.end : "00:00";
+          const calculatedHours = rawShift.hours ? Number(rawShift.hours) : diffHours(validStart, validEnd);
+          
+          processedShifts.push({
+            id: rawShift.id ? Number(rawShift.id) : (Date.now() + index),
+            jobId: jId,
+            date: validDate,
+            start: validStart,
+            end: validEnd,
+            hours: calculatedHours,
+            status: rawShift.status ? String(rawShift.status) : "completed",
+            paymentStatus: rawShift.paymentStatus ? String(rawShift.paymentStatus) : "pending",
+            paymentDate: rawShift.paymentDate ? String(rawShift.paymentDate) : validDate,
+            isManualPayout: rawShift.isManualPayout !== undefined ? Boolean(rawShift.isManualPayout) : (calculatedHours === 0 && rawShift.fixedPayout > 0),
+            fixedPayout: rawShift.fixedPayout ? Number(rawShift.fixedPayout) : 0
+          });
+        });
+
+        processedShifts.forEach(newShift => {
+          const idx = state.shifts.findIndex(oldShift => oldShift.id === newShift.id);
+          if (idx >= 0) { state.shifts[idx] = newShift; } else { state.shifts.push(newShift); }
+        });
+        
+        save(STORAGE.jobs, state.jobs);
+        save(STORAGE.shifts, state.shifts);
+        refreshAll();
+        return processedShifts.length;
+      } else {
+        alert('Ошибка структуры: Отсутствует обязательный массив смен "shifts".');
+        return false;
+      }
+    } catch (err) {
+      alert('Критическая ошибка чтения синтаксиса JSON. Проверьте кавычки и запятые.');
+      console.error(err);
+      return false;
+    }
+  }
+
+  function importAiFromFile(e){ 
+    if(!e.target.files.length) return;
+    const fr = new FileReader();
+    fr.onload = ev => { 
+      const count = executeJsonProcessing(ev.target.result);
+      if(count !== false) alert(`Успешно обработано смен из файла: ${count}.`);
+    };
+    fr.readAsText(e.target.files[0]);
+    e.target.value = '';
+  }
+
+  function importAiFromText() {
+    const txtBox = $('importAiTextarea');
+    if(!txtBox) return;
+    const count = executeJsonProcessing(txtBox.value);
+    if(count !== false) {
+      alert(`Мгновенная синхронизация завершена! Успешно обработано записей: ${count}.`);
+      txtBox.value = '';
+    }
+  }
+
+  function renderJobs(){ 
+    const el=$('jobsList'); if(!el)return; 
+    el.innerHTML = state.jobs.length ?
+      state.jobs.map(j=>`<div class="job-item"><div><strong>${escapeHtml(j.name)}</strong><div class="job-details">${fmtMoney(j.rate)}/ч (Доп. издержки: ${j.commuteCost} ₽)</div></div><button class="btn-sm btn-delete" data-delete-job="${j.id}">Удалить</button></div>`).join('') : '<div style="color:var(--text-secondary); text-align:center; font-size:13px; padding:10px;">Объекты не зарегистрированы</div>';
+    
+    const selects = [$('quickJobSelect'), $('geoJobSelect'), $('payoutJobSelect')];
+    selects.forEach(sel => {
+      if(sel) {
+        const curVal = sel.value;
+        sel.innerHTML = '<option value="">Выберите объект...</option>' + state.jobs.map(j => `<option value="${j.id}">${escapeHtml(j.name)}</option>`).join('');
+        sel.value = curVal;
+      }
+    });
+    renderTemplateExample();
+  }
+
+  function renderHistory(){ 
+    const el=$('historyList'); if(!el)return;
+    const sorted=[...state.shifts].sort((a,b) => b.date.localeCompare(a.date) || (b.start || '').localeCompare(a.start || ''));
+    el.innerHTML=sorted.length?sorted.map(s=>{ 
+      const j=getJob(s.jobId); 
+      let labelText = `${s.hours}ч`;
+      let net = 0;
+      if (s.isManualPayout) {
+        labelText = 'Фиксированная выплата';
+        net = s.fixedPayout;
+      } else {
+        net = ((j?.rate||0)*s.hours)-(j?.commuteCost||0);
+      }
+      const planned=s.status==='planned'; const paid=s.paymentStatus==='paid'; 
+      return `<div class="history-item ${planned?'planned':''} ${s.isManualPayout?'manual-payout':''}"><div class="history-info"><h4>${escapeHtml(j?.name||'Архивный контракт')} ${planned?'[ПЛАН]':''}</h4><p>${s.date} · ${labelText} · <strong>${fmtMoney(net)} (Net)</strong></p><span class="pay-badge ${paid?'pay-paid':'pay-pending'}">${paid?'Проведено':'В расчете'}</span></div><div class="history-actions"><button class="btn-sm" data-edit-shift="${s.id}">Редактировать</button><button class="btn-sm btn-delete" data-delete-shift="${s.id}">✕</button></div></div>`; 
+    }).join(''):'<div style="color:var(--text-secondary); text-align:center; font-size:13px; padding:15px;">Записи отсутствуют</div>';
+  }
+
+  function renderCalendar(){
+    const el = $('calendarGrid'); if(!el) return;
+    const year = state.currentDate.getFullYear();
+    const month = state.currentDate.getMonth();
+    
+    $('monthYear').textContent = new Date(year, month).toLocaleDateString('ru-RU', {month:'long', year:'numeric'});
+    
+    let html = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d => `<div class="calendar-day-head">${d}</div>`).join('');
+    
+    let firstDayIndex = new Date(year, month, 1).getDay();
+    firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+    
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const prevTotalDays = new Date(year, month, 0).getDate();
+    
+    for(let i = firstDayIndex - 1; i >= 0; i--) {
+      html += `<div class="calendar-day other-month"><span class="calendar-day-num">${prevTotalDays - i}</span></div>`;
+    }
+    
+    for(let day = 1; day <= totalDays; day++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const dayShifts = state.shifts.filter(s => s.date === dateStr);
+      const hasShifts = dayShifts.length > 0;
+      
+      let badgeHtml = '';
+      if (hasShifts) {
+        const hasPayout = dayShifts.some(s => s.isManualPayout);
+        badgeHtml = `<span class="calendar-day-dot" style="${hasPayout?'border-color: var(--geo);':''}">Сессий: ${dayShifts.length}</span>`;
+      }
+      
+      html += `
+        <div class="calendar-day ${hasShifts?'has-shifts':''}" data-cal-date="${dateStr}">
+          <span class="calendar-day-num">${day}</span>
+          ${badgeHtml}
+        </div>
+      `;
+    }
+    el.innerHTML = html;
+  }
+
+  function updateStats(){
+    let totalNet = 0, received = 0, pending = 0;
+    state.shifts.forEach(s => {
+      if(s.status !== 'completed') return;
+      if (!isInPeriod(s.date, state.analyticsPeriod)) return;
+      
+      let net = 0;
+      if (s.isManualPayout) {
+        net = s.fixedPayout;
+      } else {
+        const j = getJob(s.jobId);
+        net = ((j?.rate||0) * s.hours) - (j?.commuteCost||0);
+      }
+      
+      totalNet += net;
+      if(s.paymentStatus === 'paid') received += net;
+      else pending += net;
+    });
+    if($('totalNet')) $('totalNet').textContent = fmtMoney(totalNet);
+    if($('cashReceived')) $('cashReceived').textContent = fmtMoney(received);
+    if($('cashPending')) $('cashPending').textContent = fmtMoney(pending);
+  }
+
+  function updateAnalytics(){
+    const body = $('analyticsBody'); if(!body) return;
+    const map = {};
+    state.shifts.filter(s=>s.status==='completed' && isInPeriod(s.date, state.analyticsPeriod)).forEach(s => {
+      if(!map[s.jobId]) map[s.jobId] = { hours: 0, gross: 0, commute: 0, net: 0 };
+      
+      if (s.isManualPayout) {
+        map[s.jobId].net += s.fixedPayout;
+        map[s.jobId].gross += s.fixedPayout;
+      } else {
+        const j = getJob(s.jobId);
+        const gross = (j?.rate||0) * s.hours;
+        const commute = j?.commuteCost||0;
+        
+        map[s.jobId].hours += s.hours;
+        map[s.jobId].gross += gross;
+        map[s.jobId].commute += commute;
+        map[s.jobId].net += (gross - commute);
+      }
+    });
+    let html = '';
+    for(let id in map) {
+      const j = getJob(id);
+      const effectiveRate = map[id].hours ? (map[id].net / map[id].hours).toFixed(1) : '—';
+      html += `<tr>
+        <td><strong>${escapeHtml(j?.name||'Внесистемный объект')}</strong></td>
+        <td>${map[id].hours} ч</td>
+        <td>${fmtMoney(map[id].gross)}</td>
+        <td>${fmtMoney(map[id].commute)}</td>
+        <td style="font-weight:700; color:var(--primary);">${fmtMoney(map[id].net)}</td>
+        <td><strong>${effectiveRate} ${map[id].hours?'₽/ч':''}</strong></td>
+      </tr>`;
+    }
+    body.innerHTML = html || '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">В данном периоде транзакции отсутствуют</td></tr>';
+  }
+
+  function updateChart(){
+    const ctx = $('earningsChart')?.getContext('2d'); if(!ctx) return;
+    if(state.chart) state.chart.destroy();
+    
+    const labelSet = new Set();
+    const dataMap = {};
+    
+    const completedShifts = state.shifts.filter(s => s.status === 'completed' && isInPeriod(s.date, state.analyticsPeriod));
+    if (state.analyticsPeriod === 'week' || state.analyticsPeriod === 'month') {
+      completedShifts.forEach(s => {
+        labelSet.add(s.date);
+        if(!dataMap[s.date]) dataMap[s.date] = 0;
+        const j = getJob(s.jobId);
+        dataMap[s.date] += s.isManualPayout ? s.fixedPayout : (((j?.rate||0)*s.hours) - (j?.commuteCost||0));
+      });
+    } else {
+      for(let i=5; i>=0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const k = d.toLocaleString('ru-RU', {month:'short', year:'2-digit'});
+        labelSet.add(k);
+        dataMap[k] = 0;
+      }
+      completedShifts.forEach(s => {
+        const d = new Date(s.date);
+        const k = d.toLocaleString('ru-RU', {month:'short', year:'2-digit'});
+        if(dataMap[k] !== undefined) {
+          const j = getJob(s.jobId);
+          dataMap[k] += s.isManualPayout ? s.fixedPayout : (((j?.rate||0)*s.hours) - (j?.commuteCost||0));
+        }
+      });
+    }
+    
+    const sortedLabels = Array.from(labelSet).sort();
+    const datasetData = sortedLabels.map(l => dataMap[l] || 0);
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    state.chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: sortedLabels,
+        datasets: [{
+          label: 'Чистая прибыль',
+          data: datasetData,
+          backgroundColor: isDark ? '#3b82f6' : '#1e40af',
+          borderRadius: 4,
+          barThickness: state.analyticsPeriod === 'all' ? 24 : 'flex'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { grid: { color: isDark?'#1f2937':'#e2e8f0' }, ticks: { color: isDark?'#94a3b8':'#475569', font: { size: 11 } } },
+          x: { grid: { display: false }, ticks: { color: isDark?'#94a3b8':'#475569', font: { size: 11 } } }
+        }
+      }
+    });
+  }
+
+  function updateGeoUI(){
+    const jId = $('geoJobSelect').value;
+    const targetZone = state.workCoordsList.find(z => z.jobId === Number(jId));
+    
+    $('workCoordsDisplay').textContent = targetZone ? `${targetZone.lat.toFixed(5)}, ${targetZone.lon.toFixed(5)}` : 'не заданы';
+    
+    const badge=$('geoShiftBadge'), info=$('geoActiveInfo');
+    if(state.activeShift){ 
+      badge.className='status-badge status-active'; badge.textContent='Сессия активна'; info.style.display='block'; 
+      $('geoActiveJob').textContent=getJob(state.activeShift.jobId)?.name||''; 
+      $('geoActiveTime').textContent='Старт в '+state.activeShift.startTime;
+    } else { 
+      badge.className='status-badge status-inactive'; badge.textContent='Сессия закрыта'; info.style.display='none';
+    }
+  }
+
+  function setActiveShiftView(){
+    const inPanel = $('inactivePanel'), actPanel = $('activePanel');
+    if(state.activeShift) {
+      inPanel.style.display = 'none'; actPanel.style.display = 'block';
+      $('activeJobName').textContent = getJob(state.activeShift.jobId)?.name || 'Выполнение задач';
+      $('activeStartTime').textContent = `Мониторинг запущен: ${state.activeShift.startTime} (${state.activeShift.date})`;
+    } else {
+      inPanel.style.display = 'block'; actPanel.style.display = 'none';
+    }
+  }
+
+  function refreshAll(){ 
+    renderJobs(); renderHistory(); updateStats(); renderCalendar(); updateGeoUI(); setActiveShiftView();
+    if(state.activeTab=='analytics'){ updateChart(); updateAnalytics(); updateStats(); } 
+  }
+
+  function bindEvents(){
+    document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
+    $('themeBtn').addEventListener('click',toggleTheme);
+    
+    $('geoJobSelect')?.addEventListener('change', updateGeoUI);
+    
+    $('prevMonthBtn')?.addEventListener('click',()=>{state.currentDate.setMonth(state.currentDate.getMonth()-1);renderCalendar();});
+    $('nextMonthBtn')?.addEventListener('click',()=>{state.currentDate.setMonth(state.currentDate.getMonth()+1);renderCalendar();});
+    
+    $('startShiftBtn')?.addEventListener('click',startShift);
+    $('endShiftBtn')?.addEventListener('click',endShift);
+    $('openManualBtn')?.addEventListener('click',()=>openManualModal());
+    $('saveManualBtn')?.addEventListener('click',saveManualShift);
+    $('modalCloseBtn')?.addEventListener('click',closeManualModal);
+    $('addJobBtn')?.addEventListener('click',addJob);
+    $('addPayoutBtn')?.addEventListener('click',addManualPayout);
+    $('exportAiStatsBtn')?.addEventListener('click',exportAiStats);
+    $('importAiFile')?.addEventListener('change',importAiFromFile);
+    $('importAiTextBtn')?.addEventListener('click',importAiFromText);
+    $('setWorkCoordsBtn')?.addEventListener('click',setWorkCoordsFromCurrent);
+    $('clearWorkCoordsBtn')?.addEventListener('click',clearWorkCoords);
+    
+    // Элементы бэкапа приложения
+    $('exportFullBackupBtn')?.addEventListener('click', exportFullBackup);
+    $('importFullBackupFile')?.addEventListener('change', importFullBackup);
+    
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        state.analyticsPeriod = e.target.dataset.period;
+        updateStats(); updateAnalytics(); updateChart();
+      });
+    });
+    document.addEventListener('click', e => {
+      const editShift = e.target.closest('[data-edit-shift]');
+      if(editShift && editShift.dataset.editShift !== "") {
+        openManualModal(Number(editShift.dataset.editShift));
+        return;
+      }
+      
+      const delShift = e.target.closest('[data-delete-shift]');
+      if(delShift) {
+        deleteShift(Number(delShift.dataset.deleteShift));
+        return;
+      }
+      
+      const delJob = e.target.closest('[data-delete-job]');
+      if(delJob) {
+        deleteJob(Number(delJob.dataset.deleteJob));
+        return;
+      }
+      
+      const calDay = e.target.closest('[data-cal-date]');
+      if(calDay) {
+        openManualModal(null, calDay.dataset.calDate);
+        return;
+      }
+    });
+  }
+
+  function init(){ loadState(); initTheme(); bindEvents(); setTab(state.activeTab); refreshAll(); handleUrlTrigger(); }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
